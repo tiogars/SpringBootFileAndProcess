@@ -25,7 +25,8 @@ public class SystemController {
     /**
      * Logger for system information.
      */
-    private final Logger logger = LoggerFactory.getLogger(SystemController.class);
+    private final Logger logger = LoggerFactory.getLogger(
+            SystemController.class);
 
     /**
      * System service for retrieving system information.

@@ -2,9 +2,9 @@ package fr.tiogars.springbootfileandprocess.repository;
 
 import org.springframework.stereotype.Component;
 
-
 /**
- * Implementation of {@link SystemRepository} for accessing system environment variables.
+ * Implementation of {@link SystemRepository} for accessing system environment
+ * variables.
  */
 @Component
 public class SystemRepositoryImpl implements SystemRepository {
