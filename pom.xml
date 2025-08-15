@@ -12,7 +12,7 @@
 
 	<groupId>fr.tiogars</groupId>
 	<artifactId>spring-boot-file-and-process</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.1-SNAPSHOT</version>
 
 	<name>SpringBootFileAndProcess</name>
 	<description>Spring Boot File and process manager</description>
