@@ -19,10 +19,10 @@ public class SystemServiceImpl implements SystemService {
     /**
      * Constructor for SystemServiceImpl.
      *
-     * @param systemRepository The system repository interface.
+     * @param systemRepositoryParam The system repository interface.
      */
-    public SystemServiceImpl(SystemRepository systemRepository) {
-        this.systemRepository = systemRepository;
+    public SystemServiceImpl(final SystemRepository systemRepositoryParam) {
+        this.systemRepository = systemRepositoryParam;
     }
 
     /**

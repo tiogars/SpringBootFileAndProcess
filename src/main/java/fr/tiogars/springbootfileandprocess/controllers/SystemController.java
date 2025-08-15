@@ -34,16 +34,14 @@ public class SystemController {
 
     /**
      * Constructor for SystemController.
-     * 
-     * @param systemService The system service interface.
+     * @param systemServiceParam The system service interface.
      */
-    public SystemController(SystemService systemService) {
-        this.systemService = systemService;
+    public SystemController(final SystemService systemServiceParam) {
+        this.systemService = systemServiceParam;
     }
 
     /**
-     * Get system host name
-     * 
+     * Get system host name.
      * @return The system host name.
      */
     @Operation(summary = "Get system host name")

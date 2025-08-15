@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: SpringBootFileAndProcess
+server:
+  port: 8181
