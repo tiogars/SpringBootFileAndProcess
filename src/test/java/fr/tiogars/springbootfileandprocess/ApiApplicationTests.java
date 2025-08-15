@@ -1,10 +1,10 @@
-package fr.tiogars.api;
+package fr.tiogars.springbootfileandprocess;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ApiApplicationTests {
+class SpringBootFileAndProcessApplicationTests {
 
 	@Test
 	void contextLoads() {
