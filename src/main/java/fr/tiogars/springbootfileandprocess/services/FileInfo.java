@@ -1,6 +1,14 @@
 package fr.tiogars.springbootfileandprocess.services;
 
+/**
+ * Class representing information about a file.
+ */
 public class FileInfo {
+
+    /**
+     * The path of the file or directory.
+     */
+    private String path;
 
     /**
      * The name of the file or directory.
@@ -145,5 +153,13 @@ public class FileInfo {
      */
     public void setHidden(final boolean hiddenParam) {
         this.hidden = hiddenParam;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

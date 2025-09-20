@@ -39,14 +39,26 @@ public class FileServiceImpl implements FileService {
     public List<FileInfo> listFiles(final String directoryParam) {
         List<File> files = fileRepository.listFiles(directoryParam);
         return files.stream().map(file -> {
-            FileInfo fileInfo = new FileInfo();
-            fileInfo.setName(file.getName());
-            fileInfo.setSize(file.length());
-            fileInfo.setLastModified(file.lastModified());
-            fileInfo.setDirectory(file.isDirectory());
-            fileInfo.setFile(file.isFile());
-            fileInfo.setHidden(file.isHidden());
+            FileInfo fileInfo = toFileInfo(file);
             return fileInfo;
         }).collect(Collectors.toList());
+    }
+
+    /**
+     * Converts a File object to a FileInfo object.
+     *
+     * @param file the file to convert
+     * @return the corresponding FileInfo object
+     */
+    private FileInfo toFileInfo(File file) {
+        FileInfo fileInfo = new FileInfo();
+        fileInfo.setName(file.getName());
+        fileInfo.setPath(file.getPath());
+        fileInfo.setSize(file.length());
+        fileInfo.setLastModified(file.lastModified());
+        fileInfo.setDirectory(file.isDirectory());
+        fileInfo.setFile(file.isFile());
+        fileInfo.setHidden(file.isHidden());
+        return fileInfo;
     }
 }

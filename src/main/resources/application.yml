@@ -1,5 +1,23 @@
-spring:
-  application:
-    name: SpringBootFileAndProcess
+# Application Configuration File
+
+# Server Configuration
 server:
+  # Server Port
   port: 8181
+
+# Spring Application Configuration
+spring:
+  # Application Profile
+  application:
+    # Application Name
+    name: SpringBootFileAndProcess
+
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    fr.tiogars.springbootfileandprocess: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/springbootfileandprocess.log
