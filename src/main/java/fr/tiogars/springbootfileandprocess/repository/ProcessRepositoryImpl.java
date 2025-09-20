@@ -16,6 +16,9 @@ import org.springframework.stereotype.Component;
 import fr.tiogars.springbootfileandprocess.models.CommandResult;
 import fr.tiogars.springbootfileandprocess.models.ExecutableCommand;
 
+/**
+ * Implementation of {@link ProcessRepository} for process management.
+ */
 @Component
 public class ProcessRepositoryImpl implements ProcessRepository {
 
@@ -31,10 +34,16 @@ public class ProcessRepositoryImpl implements ProcessRepository {
             ProcessRepositoryImpl.class);
 
     /**
+     * Default constructor.
+     */
+    public ProcessRepositoryImpl() {
+        // Default constructor
+    }
+
+    /**
      * Executes the given command and waits for a response.
      * 
      * @param executableCommandParam the command to execute
-     * @param workingDirectory the working directory (nullable)
      * @return the process that was started
      * @throws IOException          if an I/O error occurs
      * @throws InterruptedException if the process is interrupted

@@ -155,10 +155,20 @@ public class FileInfo {
         this.hidden = hiddenParam;
     }
 
+    /**
+     * Gets the path of the file or directory.
+     *
+     * @return the path of the file or directory
+     */
     public String getPath() {
         return path;
     }
 
+    /**
+     * Sets the path of the file or directory.
+     *
+     * @param path the path to set
+     */
     public void setPath(String path) {
         this.path = path;
     }

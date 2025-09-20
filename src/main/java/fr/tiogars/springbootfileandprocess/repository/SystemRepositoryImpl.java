@@ -10,6 +10,13 @@ import org.springframework.stereotype.Component;
 public class SystemRepositoryImpl implements SystemRepository {
 
     /**
+     * Default constructor.
+     */
+    public SystemRepositoryImpl() {
+        // Default constructor
+    }
+
+    /**
      * Gets the computer name from the environment variable.
      *
      * @return The computer name as a String.

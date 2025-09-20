@@ -21,6 +21,13 @@ public class FileServiceImpl implements FileService {
     private FileRepository fileRepository;
 
     /**
+     * Default constructor.
+     */
+    public FileServiceImpl() {
+        // Default constructor
+    }
+
+    /**
      * Constructor for FileServiceImpl.
      *
      * @param fileRepositoryParam the file repository to use

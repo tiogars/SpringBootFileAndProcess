@@ -13,6 +13,13 @@ import org.springframework.stereotype.Component;
 public class FileRepositoryImpl implements FileRepository {
 
     /**
+     * Default constructor.
+     */
+    public FileRepositoryImpl() {
+        // Default constructor
+    }
+
+    /**
      * Lists all files in a directory.
      */
     @Override
