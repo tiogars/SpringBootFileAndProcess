@@ -1,0 +1,28 @@
+site_name: SpringBootFileAndProcess
+site_description: Spring Boot File and Process Management API
+site_author: Tiogars
+site_url: https://github.com/tiogars/SpringBootFileAndProcess
+
+repo_name: tiogars/SpringBootFileAndProcess
+repo_url: https://github.com/tiogars/SpringBootFileAndProcess
+
+theme:
+  name: readthedocs
+  language: en
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Configuration: configuration.md
+  - API Reference:
+    - File Management: api/file-management.md
+    - Process Management: api/process-management.md
+    - System Information: api/system-information.md
+  - Examples: examples.md
+  - Deployment: deployment.md
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - toc:
+      permalink: true
