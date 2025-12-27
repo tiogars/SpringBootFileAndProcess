@@ -60,3 +60,6 @@ target/
 
 # VS Code settings
 .vscode/
+
+# MkDocs generated site
+site/
