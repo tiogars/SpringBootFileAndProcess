@@ -51,6 +51,10 @@ public class ProcessController {
     ) {
         try {
             return ResponseEntity.ok(processService.executeAndWaitForResponse(command));
+        } catch (SecurityException e) {
+            // Handle security exceptions
+            e.printStackTrace();
+            return ResponseEntity.status(403).body(new CommandResult(-1, java.util.Arrays.asList("Security Error", e.getMessage())));
         } catch (IOException | InterruptedException e) {
             // Handle exceptions
             e.printStackTrace();

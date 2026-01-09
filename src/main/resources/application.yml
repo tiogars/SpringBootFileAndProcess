@@ -12,6 +12,40 @@ spring:
     # Application Name
     name: SpringBootFileAndProcess
 
+# Command Security Configuration
+command:
+  security:
+    # Enable or disable command validation (default: true)
+    enabled: true
+    # List of allowed commands (only these commands can be executed)
+    allowedCommands:
+      - echo
+      - ls
+      - pwd
+      - date
+      - ffmpeg
+      - mvn
+      - java
+    # Argument patterns for each command (optional regex patterns)
+    # If specified, all arguments must match at least one pattern
+    # Use strict patterns to prevent shell injection attacks
+    argumentPatterns:
+      echo:
+        - "[a-zA-Z0-9 _.,!?-]+"  # Alphanumeric and safe punctuation only
+      ls:
+        - "-[a-zA-Z]+"           # Allow options like -la, -l, -a
+        - "/[a-zA-Z0-9/_.-]+"    # Allow absolute paths (no special chars)
+        - "[a-zA-Z0-9_.-]+"      # Allow relative paths (no special chars)
+      ffmpeg:
+        - "-[a-zA-Z]:[a-zA-Z0-9]+"         # Allow options like -c:v, -c:a
+        - "-[a-zA-Z]+"                     # Allow flags like -i
+        - "[a-zA-Z0-9][a-zA-Z0-9_./+-]*"   # Allow filenames and safe values
+      mvn:
+        - "[a-zA-Z]+:[a-zA-Z-]+"           # Allow goals like clean:clean, install
+        - "[a-zA-Z-]+"                     # Allow simple goals like clean, test
+        - "-D[a-zA-Z.]+=[a-zA-Z0-9_./+-]+" # Allow properties (no shell chars)
+        - "-[a-zA-Z]+"                     # Allow flags like -X, -e
+
 # Logging Configuration
 logging:
   level:

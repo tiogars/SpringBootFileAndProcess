@@ -20,12 +20,20 @@ public class ProcessServiceImpl implements ProcessService {
     private ProcessRepository processRepository;
 
     /**
+     * The command validation service for security checks.
+     */
+    private CommandValidationService commandValidationService;
+
+    /**
      * Constructor for ProcessServiceImpl.
      *
      * @param processRepositoryParam the process repository
+     * @param commandValidationServiceParam the command validation service
      */
-    public ProcessServiceImpl(final ProcessRepository processRepositoryParam) {
+    public ProcessServiceImpl(final ProcessRepository processRepositoryParam,
+            final CommandValidationService commandValidationServiceParam) {
         this.processRepository = processRepositoryParam;
+        this.commandValidationService = commandValidationServiceParam;
     }
 
     /**
@@ -35,9 +43,12 @@ public class ProcessServiceImpl implements ProcessService {
      * @return the result of the command execution
      * @throws IOException          if an I/O error occurs
      * @throws InterruptedException if the execution is interrupted
+     * @throws SecurityException    if the command is not allowed
      */
     public CommandResult executeAndWaitForResponse(final ExecutableCommand executableCommandParam)
             throws IOException, InterruptedException {
+        // Validate command before execution
+        commandValidationService.validateCommand(executableCommandParam);
         return processRepository.executeAndWaitForResponse(executableCommandParam);
     }
 }
