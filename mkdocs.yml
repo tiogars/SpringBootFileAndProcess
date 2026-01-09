@@ -13,6 +13,7 @@ theme:
 nav:
   - Home: index.md
   - Getting Started: getting-started.md
+  - Security: security.md
   - Configuration: configuration.md
   - API Reference:
     - File Management: api/file-management.md

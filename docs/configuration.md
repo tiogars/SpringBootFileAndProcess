@@ -84,6 +84,47 @@ logging:
 
 The log file will be created in the `logs` directory relative to the application's working directory.
 
+## Security Configuration
+
+SpringBootFileAndProcess includes a command allow-listing feature to prevent unauthorized command execution. See [Security](security.md) for detailed information.
+
+### Command Security
+
+```yaml
+command:
+  security:
+    # Enable or disable command validation
+    enabled: true
+    
+    # List of allowed commands
+    allowedCommands:
+      - echo
+      - ls
+      - pwd
+      - date
+      - ffmpeg
+      - mvn
+      - java
+    
+    # Argument patterns for each command (optional regex patterns)
+    argumentPatterns:
+      echo:
+        - "[a-zA-Z0-9 _.,!?-]+"
+      ls:
+        - "-[a-zA-Z]+"
+        - "/[a-zA-Z0-9/_.-]+"
+        - "[a-zA-Z0-9_.-]+"
+```
+
+Key configuration options:
+
+- `enabled` - Set to `false` to disable security validation (not recommended for production)
+- `allowedCommands` - Only commands in this list can be executed
+- `argumentPatterns` - Optional regex patterns that arguments must match
+
+!!! warning
+    Always keep command security enabled in production. Only add commands to the allow-list that are necessary for your application. Use strict argument patterns to prevent shell injection attacks.
+
 ## CORS Configuration
 
 The application is configured to allow cross-origin requests from any origin. This is set in the controller classes with:
@@ -133,8 +174,9 @@ java -jar spring-boot-file-and-process.jar --server.port=9090 --logging.level.ro
 
 For production deployments, consider:
 
-1. **Restrict CORS**: Limit cross-origin access to trusted domains
-2. **Log Levels**: Use INFO or WARN level logging to reduce log volume
-3. **File Paths**: Ensure the application has appropriate file system permissions
-4. **Process Execution**: Validate and sanitize command inputs to prevent security issues
-5. **Monitoring**: Enable and configure Spring Actuator endpoints appropriately
+1. **Command Security**: Keep command validation enabled and maintain a minimal allow-list
+2. **Restrict CORS**: Limit cross-origin access to trusted domains
+3. **Log Levels**: Use INFO or WARN level logging to reduce log volume
+4. **File Paths**: Ensure the application has appropriate file system permissions
+5. **Argument Validation**: Define strict argument patterns to prevent injection attacks
+6. **Monitoring**: Enable and configure Spring Actuator endpoints appropriately

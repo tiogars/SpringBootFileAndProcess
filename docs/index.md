@@ -18,7 +18,9 @@ SpringBootFileAndProcess is a Java-based REST API service built with Spring Boot
 - Cross-platform support for both Linux and Windows file systems
 
 ### Process Management
-- Execute arbitrary system commands
+- Execute system commands with **security controls**
+- **Command allow-listing** to prevent arbitrary command execution
+- **Argument pattern validation** to prevent shell injection attacks
 - Control working directory for command execution
 - Pass command-line arguments
 - Capture command output and exit codes
@@ -40,6 +42,7 @@ SpringBootFileAndProcess is a Java-based REST API service built with Spring Boot
 ## Quick Links
 
 - [Getting Started](getting-started.md): Installation and running the application
+- [Security](security.md): Command allow-listing and security features
 - [API Reference](api/file-management.md): Detailed API endpoint documentation
 - [Configuration](configuration.md): Application configuration options
 - [Examples](examples.md): Common usage examples
