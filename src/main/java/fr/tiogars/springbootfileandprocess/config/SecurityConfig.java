@@ -37,14 +37,14 @@ public class SecurityConfig {
     /**
      * Configures the security filter chain with endpoint protection rules.
      *
-     * @param http the HttpSecurity to configure
+     * @param httpSecurity the HttpSecurity to configure
      * @return the configured SecurityFilterChain
      * @throws Exception if configuration fails
      */
     @Bean
-    public SecurityFilterChain securityFilterChain(final HttpSecurity http)
+    public SecurityFilterChain securityFilterChain(final HttpSecurity httpSecurity)
             throws Exception {
-        http
+        httpSecurity
             .authorizeHttpRequests(authorize -> authorize
                 // Require authentication for /process/** endpoints
                 .requestMatchers("/process/**").authenticated()
@@ -60,12 +60,9 @@ public class SecurityConfig {
             )
             .httpBasic(Customizer.withDefaults())
             // Disable CSRF for stateless REST API with Basic Auth
-            // CSRF protection is not required for APIs that don't use session-based
-            // authentication and don't set cookies. This API uses HTTP Basic auth
-            // which is stateless and doesn't rely on cookies for authentication.
             .csrf(csrf -> csrf.disable());
 
-        return http.build();
+        return httpSecurity.build();
     }
 
     /**

@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Base64;
@@ -173,7 +174,7 @@ public class SecurityTest {
                     getBaseUrl() + "/file/list?directoryParam=/tmp", String.class);
             // Should return 200 OK or other status, but NOT 401
             assertTrue(response.getStatusCode() != HttpStatus.UNAUTHORIZED);
-        } catch (HttpClientErrorException | org.springframework.web.client.HttpServerErrorException e) {
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
             // If we get an HTTP error, it should NOT be 401 Unauthorized
             assertTrue(e.getStatusCode() != HttpStatus.UNAUTHORIZED,
                     "File endpoint should not require authentication but got: " + e.getStatusCode());
