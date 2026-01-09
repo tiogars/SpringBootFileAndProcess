@@ -12,6 +12,14 @@ spring:
     # Application Name
     name: SpringBootFileAndProcess
 
+# Application Security Configuration
+app:
+  security:
+    # Username for API authentication
+    username: ${SECURITY_USERNAME:admin}
+    # Password for API authentication
+    password: ${SECURITY_PASSWORD:admin}
+
 # Logging Configuration
 logging:
   level:
