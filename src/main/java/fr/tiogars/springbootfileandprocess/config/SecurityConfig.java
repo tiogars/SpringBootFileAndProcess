@@ -59,7 +59,11 @@ public class SecurityConfig {
                 .anyRequest().permitAll()
             )
             .httpBasic(Customizer.withDefaults())
-            .csrf(csrf -> csrf.disable()); // Disable CSRF for REST API
+            // Disable CSRF for stateless REST API with Basic Auth
+            // CSRF protection is not required for APIs that don't use session-based
+            // authentication and don't set cookies. This API uses HTTP Basic auth
+            // which is stateless and doesn't rely on cookies for authentication.
+            .csrf(csrf -> csrf.disable());
 
         return http.build();
     }
