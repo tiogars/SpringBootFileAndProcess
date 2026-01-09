@@ -2,6 +2,39 @@
 
 The Process Management API allows you to execute system commands and processes programmatically.
 
+## Authentication
+
+!!! warning "Authentication Required"
+    The Process Management API endpoints require HTTP Basic authentication. Unauthenticated requests will receive a `401 Unauthorized` response.
+
+### Default Credentials
+
+The default credentials are:
+- **Username:** `admin`
+- **Password:** `admin`
+
+!!! danger "Change Default Credentials"
+    **Important:** Change the default credentials before deploying to production. See [Configuration](#configuration) below.
+
+### Configuration
+
+Credentials can be configured via environment variables or `application.yml`:
+
+**Using Environment Variables:**
+```bash
+export SECURITY_USERNAME=your_username
+export SECURITY_PASSWORD=your_secure_password
+java -jar spring-boot-file-and-process.jar
+```
+
+**Using application.yml:**
+```yaml
+app:
+  security:
+    username: your_username
+    password: your_secure_password
+```
+
 ## Endpoints
 
 ### Execute Command
@@ -64,6 +97,9 @@ Returns a `CommandResult` object containing the exit code and output.
 
 **Error Responses:**
 
+- **Code:** 401 Unauthorized
+  - **Reason:** Missing or invalid authentication credentials
+
 - **Code:** 400 Bad Request
   - **Reason:** Invalid request body or missing required fields
 
@@ -76,10 +112,11 @@ Returns a `CommandResult` object containing the exit code and output.
 
 This example shows how to execute an ffmpeg command to convert a video file.
 
-**Request:**
+**Request with Authentication:**
 
 ```bash
 curl -X POST http://localhost:8181/process/execute \
+  -u admin:admin \
   -H "Content-Type: application/json" \
   -d '{
     "command": "ffmpeg",
@@ -103,6 +140,40 @@ curl -X POST http://localhost:8181/process/execute \
   }'
 ```
 
+**Alternative: Using Authorization Header:**
+
+```bash
+curl -X POST http://localhost:8181/process/execute \
+  -H "Authorization: Basic YWRtaW46YWRtaW4=" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "command": "ffmpeg",
+    "workingDirectory": "/path/to/input",
+    "commandPath": "/usr/bin",
+    "arguments": [
+      "-i",
+      "/path/to/input/file.mp4",
+      "-c:v",
+      "libx264",
+      "-preset",
+      "fast",
+      "-crf",
+      "22",
+      "-c:a",
+      "aac",
+      "-b:a",
+      "192k",
+      "/path/to/output/file.mp4"
+    ]
+  }'
+```
+
+!!! tip "Base64 Encoding"
+    The Authorization header value `YWRtaW46YWRtaW4=` is the Base64 encoding of `admin:admin`. You can generate your own using:
+    ```bash
+    echo -n "username:password" | base64
+    ```
+
 **Response:**
 
 ```json
@@ -123,6 +194,7 @@ curl -X POST http://localhost:8181/process/execute \
 
 ```bash
 curl -X POST http://localhost:8181/process/execute \
+  -u admin:admin \
   -H "Content-Type: application/json" \
   -d '{
     "command": "mvn",
@@ -136,6 +208,7 @@ curl -X POST http://localhost:8181/process/execute \
 
 ```bash
 curl -X POST http://localhost:8181/process/execute \
+  -u admin:admin \
   -H "Content-Type: application/json" \
   -d '{
     "command": "mvn.cmd",
@@ -151,6 +224,7 @@ curl -X POST http://localhost:8181/process/execute \
 
 ```bash
 curl -X POST http://localhost:8181/process/execute \
+  -u admin:admin \
   -H "Content-Type: application/json" \
   -d '{
     "command": "ls",
@@ -162,11 +236,15 @@ curl -X POST http://localhost:8181/process/execute \
 ### Using with JavaScript
 
 ```javascript
-async function executeCommand(command, workingDirectory, commandPath, args) {
+async function executeCommand(command, workingDirectory, commandPath, args, username, password) {
+  // Create Basic Auth credentials
+  const credentials = btoa(`${username}:${password}`);
+  
   const response = await fetch('http://localhost:8181/process/execute', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'Authorization': `Basic ${credentials}`
     },
     body: JSON.stringify({
       command: command,
@@ -176,15 +254,22 @@ async function executeCommand(command, workingDirectory, commandPath, args) {
     })
   });
   
+  if (response.status === 401) {
+    throw new Error('Authentication failed');
+  }
+  
   const result = await response.json();
   return result;
 }
 
 // Usage
-executeCommand('ffmpeg', '/tmp', '/usr/bin', ['-version'])
+executeCommand('ffmpeg', '/tmp', '/usr/bin', ['-version'], 'admin', 'admin')
   .then(result => {
     console.log('Exit code:', result.exitCode);
     console.log('Output:', result.output.join('\n'));
+  })
+  .catch(error => {
+    console.error('Error:', error);
   });
 ```
 
@@ -193,8 +278,10 @@ executeCommand('ffmpeg', '/tmp', '/usr/bin', ['-version'])
 ```python
 import requests
 import json
+from requests.auth import HTTPBasicAuth
 
-def execute_command(command, working_directory, command_path=None, arguments=None):
+def execute_command(command, working_directory, username='admin', password='admin',
+                   command_path=None, arguments=None):
     url = "http://localhost:8181/process/execute"
     payload = {
         "command": command,
@@ -203,20 +290,34 @@ def execute_command(command, working_directory, command_path=None, arguments=Non
         "arguments": arguments or []
     }
     
-    response = requests.post(url, json=payload)
+    response = requests.post(
+        url,
+        json=payload,
+        auth=HTTPBasicAuth(username, password)
+    )
+    
+    if response.status_code == 401:
+        raise Exception('Authentication failed')
+    
+    response.raise_for_status()
     return response.json()
 
 # Usage
-result = execute_command(
-    command="mvn",
-    working_directory="/home/user/my-project",
-    command_path="/usr/local/bin",
-    arguments=["site"]
-)
-
-print(f"Exit code: {result['exitCode']}")
-for line in result['output']:
-    print(line)
+try:
+    result = execute_command(
+        command="mvn",
+        working_directory="/home/user/my-project",
+        command_path="/usr/local/bin",
+        arguments=["site"],
+        username="admin",
+        password="admin"
+    )
+    
+    print(f"Exit code: {result['exitCode']}")
+    for line in result['output']:
+        print(line)
+except Exception as e:
+    print(f"Error: {e}")
 ```
 
 ## Platform-Specific Considerations
@@ -238,14 +339,31 @@ for line in result['output']:
 !!! danger "Security Warning"
     Executing arbitrary commands poses significant security risks. Consider the following:
     
+    - **Authentication & Authorization**: ✅ HTTP Basic authentication is now required for all process execution endpoints
+    - **Secure Credentials**: Store credentials securely and change default values in production
     - **Input Validation**: Always validate and sanitize command inputs
     - **Command Whitelist**: Consider maintaining a whitelist of allowed commands
     - **Path Validation**: Validate working directories and command paths
     - **Argument Sanitization**: Sanitize all command arguments to prevent injection attacks
-    - **Authentication**: Implement authentication and authorization
     - **Auditing**: Log all command executions for security auditing
     - **Resource Limits**: Consider implementing timeouts and resource limits
     - **Sandboxing**: Consider running commands in a sandboxed environment
+    - **HTTPS**: Use HTTPS in production to protect credentials in transit
+
+### Access Control
+
+The following endpoints require authentication:
+
+- `POST /process/execute` - Requires HTTP Basic authentication
+- `GET /actuator/**` (except `/actuator/health`) - Requires authentication
+
+The following endpoints are publicly accessible:
+
+- `GET /system/**` - System information endpoints
+- `GET /file/**` - File management endpoints
+- `GET /actuator/health` - Health check endpoint
+- `GET /swagger-ui/**` - Swagger UI
+- `GET /v3/api-docs/**` - OpenAPI documentation
 
 ## Error Handling
 
